@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Update Tour</title>
+    <link rel="stylesheet" th:href="@{/bootstrap.css}">
+    <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+<body>
+<div class="container">
+    <div th:replace="~{fragments/header :: header}"></div>
+
+    <div class="custom-panel mt-4">
+        <h2 class="sub-title">Update Tour</h2>
+
+        <!-- Form update dung id trong URL de controller biet ban ghi can sua. -->
+        <form th:action="@{/tours/{id}/update(id=${tour.id})}" th:object="${tour}" method="post" class="row g-3" novalidate>
+            <input type="hidden" th:field="*{id}">
+
+            <div class="col-md-6">
+                <label for="tourName" class="form-label">Tour Name</label>
+                <input type="text" id="tourName" th:field="*{tourName}" class="form-control"
+                       th:classappend="${#fields.hasErrors('tourName')} ? 'is-invalid'">
+                <div class="invalid-feedback" th:errors="*{tourName}"></div>
+            </div>
+
+            <div class="col-md-6">
+                <label for="destination" class="form-label">Destination</label>
+                <input type="text" id="destination" th:field="*{destination}" class="form-control"
+                       th:classappend="${#fields.hasErrors('destination')} ? 'is-invalid'">
+                <div class="invalid-feedback" th:errors="*{destination}"></div>
+            </div>
+
+            <div class="col-md-4">
+                <label for="capacity" class="form-label">Capacity</label>
+                <input type="text" id="capacity" th:field="*{capacity}" class="form-control"
+                       th:classappend="${#fields.hasErrors('capacity')} ? 'is-invalid'">
+                <div class="invalid-feedback" th:errors="*{capacity}"></div>
+            </div>
+
+            <div class="col-md-4">
+                <label for="duration" class="form-label">Duration</label>
+                <input type="text" id="duration" th:field="*{duration}" class="form-control"
+                       th:classappend="${#fields.hasErrors('duration')} ? 'is-invalid'">
+                <div class="invalid-feedback" th:errors="*{duration}"></div>
+            </div>
+
+            <div class="col-md-4">
+                <label for="startDate" class="form-label">Start Date</label>
+                <!-- Update Tour yeu cau nhap textbox theo dung format dd/MM/yyyy. -->
+                <input type="text" id="startDate" name="startDate" class="form-control"
+                       placeholder="dd/MM/yyyy"
+                       maxlength="10"
+                       data-date-format="dd/MM/yyyy"
+                       th:value="${tour.startDate != null ? #temporals.format(tour.startDate, 'dd/MM/yyyy') : ''}"
+                       th:classappend="${#fields.hasErrors('startDate')} ? 'is-invalid'">
+                <div class="invalid-feedback" th:errors="*{startDate}"></div>
+            </div>
+
+            <div class="col-md-6">
+                <label for="price" class="form-label">Price</label>
+                <!-- Dat ky hieu $ o cuoi o nhap bang input-group, field price van chi submit gia tri so. -->
+                <div class="input-group has-validation">
+                    <input type="text" id="price" th:field="*{price}" class="form-control"
+                           th:classappend="${#fields.hasErrors('price')} ? 'is-invalid'">
+                    <span class="input-group-text">$</span>
+                </div>
+                <div class="invalid-feedback" th:errors="*{price}"></div>
+            </div>
+
+            <div class="col-md-6">
+                <label for="status" class="form-label">Status</label>
+                <select id="status" th:field="*{status}" class="form-select"
+                        th:classappend="${#fields.hasErrors('status')} ? 'is-invalid'">
+                    <option value="">-- Select status --</option>
+                    <option th:each="item : ${statuses}" th:value="${item.status()}" th:text="${item.statusDesc()}"></option>
+                </select>
+                <div class="invalid-feedback" th:errors="*{status}"></div>
+            </div>
+
+            <div class="col-12">
+                <button type="submit" class="btn btn-primary">Update</button>
+                <a class="btn btn-secondary" th:href="@{/tours}">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+<script th:src="@{/bootstrap.bundle.js}"></script>
+<script th:src="@{/start-date-format.js}"></script>
+</body>
+</html>

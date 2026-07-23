@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Tour List</title>
+    <link rel="stylesheet" th:href="@{/bootstrap.css}">
+    <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+<body>
+<div class="container">
+    <!-- Dung lai fragment header hien co de giu giao dien dong nhat. -->
+    <div th:replace="~{fragments/header :: header}"></div>
+
+    <div class="custom-panel mt-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2 class="sub-title mb-0">Tour List</h2>
+            <a class="btn btn-primary" th:href="@{/tours/add}">Add Tour</a>
+        </div>
+
+        <!-- Hien thi thong bao sau khi add/update/delete thanh cong va redirect ve list. -->
+        <div class="alert alert-success alert-dismissible fade show" role="alert" th:if="${successMessage}">
+            <span th:text="${successMessage}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+        <!-- Form search gui keyword len /tours bang method GET de tim kiem theo Destination. -->
+        <form class="row g-2 mb-3" th:action="@{/tours}" method="get">
+            <div class="col-md-8">
+                <input type="text" class="form-control" name="keyword"
+                       placeholder="Search by Destination"
+                       th:value="${keyword}">
+            </div>
+            <div class="col-md-4">
+                <button type="submit" class="btn btn-primary">Search</button>
+                <a class="btn btn-secondary" th:href="@{/tours}">Clear</a>
+            </div>
+        </form>
+
+        <!-- Neu chua co du lieu, hien thi thong bao rieng thay vi bang rong. -->
+        <div class="alert alert-info" th:if="${#lists.isEmpty(tours)}">
+            No tour data found.
+        </div>
+
+        <div class="table-responsive" th:if="${!#lists.isEmpty(tours)}">
+            <table class="table table-bordered table-hover align-middle">
+                <thead class="table-custom-header">
+                <tr>
+                    <th># No</th>
+                    <th>Tour Name</th>
+                    <th>Destination</th>
+                    <th>Capacity</th>
+                    <th>Duration</th>
+                    <th>Start Date</th>
+                    <th>Price</th>
+                    <th>Status</th>
+                    <th class="text-center">Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <!-- iterStat la bien trang thai cua Thymeleaf, count dung de dem STT bat dau tu 1. -->
+                <tr th:each="tour, iterStat : ${tours}">
+                    <td th:text="${iterStat.count}"></td>
+                    <td th:text="${tour.tourName}"></td>
+                    <td th:text="${tour.destination}"></td>
+                    <td th:text="${tour.capacity}"></td>
+                    <td th:text="${tour.duration + ' days'}"></td>
+                    <td th:text="${#temporals.format(tour.startDate, 'dd/MM/yyyy')}"></td>
+                    <td th:text="${#numbers.formatDecimal(tour.price, 1, 'COMMA', 2, 'POINT') + ' $'}"></td>
+                    <td>
+                        <span class="badge bg-success" th:if="${tour.status == 'AC'}" th:text="${tour.statusDesc}"></span>
+                        <span class="badge bg-danger" th:if="${tour.status == 'IN'}" th:text="${tour.statusDesc}"></span>
+                        <span class="badge bg-warning text-dark" th:if="${tour.status == 'DR'}" th:text="${tour.statusDesc}"></span>
+                    </td>
+                    <td class="text-center">
+                        <a class="btn btn-sm btn-info text-white" th:href="@{/tours/{id}(id=${tour.id})}">Detail</a>
+                        <a class="btn btn-sm btn-warning" th:href="@{/tours/{id}/update(id=${tour.id})}">Update</a>
+                        <!-- Nut Delete chi mo modal Bootstrap, khong dung confirm mac dinh cua window. -->
+                        <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal"
+                                th:data-bs-target="'#deleteModal' + ${tour.id}">
+                            Delete
+                        </button>
+
+                        <!-- Modal xac nhan xoa rieng cho tung tour trong danh sach. -->
+                        <div class="modal fade" th:id="'deleteModal' + ${tour.id}" tabindex="-1"
+                             aria-labelledby="deleteModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content text-start">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        Are you sure you want to delete
+                                        <strong th:text="${tour.tourName}"></strong>?
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                        <form th:action="@{/tours/{id}/delete(id=${tour.id})}" method="post">
+                                            <button type="submit" class="btn btn-danger">Delete</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script th:src="@{/bootstrap.bundle.js}"></script>
+</body>
+</html>

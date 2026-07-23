@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TourVerse - Discover Your Next Adventure</title>
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=block" rel="stylesheet">
+    <!-- Existing Bootstrap & Styles in static -->
+    <link rel="stylesheet" th:href="@{/bootstrap.css}">
+    <link rel="stylesheet" th:href="@{/style.css}">
+    <link rel="stylesheet" th:href="@{/landing.css}">
+</head>
+<body>
+
+    <!-- Top Navigation Bar (Shared Fragment) -->
+    <div th:replace="~{fragments/header :: header}"></div>
+
+
+
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-bg" th:style="'background-image: url(' + @{/images/hero-phuquoc.jpg} + ');'"></div>
+        <div class="hero-overlay"></div>
+
+        <div class="container hero-content text-center px-4">
+            <h1 class="hero-title mb-3">Discover Your Next Adventure</h1>
+            <p class="hero-subtitle mb-0 max-w-700 mx-auto">
+                Tour management page for administrators.
+            </p>
+        </div>
+    </section>
+
+    <!-- Featured / Popular Tours -->
+    <section id="PopularTours" class="py-5 container reveal-on-scroll">
+
+        <div class="d-flex justify-content-between align-items-end mb-4 pt-4">
+            <div>
+                <h2 class="fw-extrabold font-display mb-0">Popular Tours</h2>
+            </div>
+            <a th:href="@{/tours}" class="text-primary fw-semibold text-decoration-none d-none d-md-flex align-items-center gap-1">
+                View All Experiences <span class="material-symbols-outlined fs-5">arrow_forward</span>
+            </a>
+        </div>
+
+        <!-- Dynamic Tours loop if tours model exists -->
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" th:if="${tours != null and !#lists.isEmpty(tours)}">
+            <div class="col" th:each="tour, iterStat : ${tours}">
+                <div class="adventure-card">
+                    <div class="card-img-wrapper">
+                        <!-- Image selector according to index -->
+                        <img th:if="${iterStat.count % 3 == 1}" th:src="@{/images/mucangchai.jpg}" alt="Tour Image" class="img-fluid">
+                        <img th:if="${iterStat.count % 3 == 2}" th:src="@{/images/fansipan.jpg}" alt="Tour Image" class="img-fluid">
+                        <img th:if="${iterStat.count % 3 == 0}" th:src="@{/images/trangan.jpg}" alt="Tour Image" class="img-fluid">
+                        
+                        <div class="card-badge badge-trending" th:if="${iterStat.count % 2 == 1}">Trending</div>
+                        <div class="card-badge badge-bestseller" th:if="${iterStat.count % 2 == 0}">Best Seller</div>
+                        
+                        <div class="card-rating-pill glass-pill text-dark">
+                            <span class="material-symbols-outlined text-warning fs-6">star</span>
+                            <span>4.9 (150+ reviews)</span>
+                        </div>
+                    </div>
+                    <div class="p-4 d-flex flex-column flex-grow-1">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <div>
+                                <p class="text-muted small mb-1 d-flex align-items-center gap-1">
+                                    <span class="material-symbols-outlined fs-6 text-primary">location_on</span>
+                                    <span th:text="${tour.destination}">Destination</span>
+                                </p>
+                                <h3 class="h5 fw-bold font-display mb-0 text-dark" th:text="${tour.tourName}">Tour Name</h3>
+                            </div>
+                            <div class="text-end">
+                                <span class="fw-bold text-primary fs-4" th:text="${#numbers.formatDecimal(tour.price, 1, 'COMMA', 2, 'POINT') + ' $'}">$650</span>
+                            </div>
+                        </div>
+
+                        <div class="d-flex gap-3 mb-4 text-secondary small">
+                            <div class="d-flex align-items-center gap-1">
+                                <span class="material-symbols-outlined fs-5">hotel</span> Hotel
+                            </div>
+                            <div class="d-flex align-items-center gap-1">
+                                <span class="material-symbols-outlined fs-5">directions_bus</span> Trans.
+                            </div>
+                            <div class="d-flex align-items-center gap-1">
+                                <span class="material-symbols-outlined fs-5">restaurant</span> Meals
+                            </div>
+                        </div>
+
+                        <div class="mt-auto d-flex align-items-center justify-content-between pt-3 border-top">
+                            <span class="small fw-semibold text-muted" th:text="${tour.duration + ' Days Trip'}">4 Days</span>
+                            <a th:href="@{/tours/{id}(id=${tour.id})}" class="btn btn-outline-primary-custom btn-sm px-3">View Detail</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Fallback Static Cards (If tours list is empty or null) -->
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" th:if="${tours == null or #lists.isEmpty(tours)}">
+            <!-- Card 1 -->
+            <div class="col">
+                <div class="adventure-card">
+                    <div class="card-img-wrapper">
+                        <img th:src="@{/images/mucangchai.jpg}" alt="Mù Cang Chải Rice Terraces">
+                        <div class="card-badge badge-trending">Trending</div>
+                        <div class="card-rating-pill glass-pill text-dark">
+                            <span class="material-symbols-outlined text-warning fs-6">star</span> 4.8 (120 reviews)
+                        </div>
+                    </div>
+                    <div class="p-4 d-flex flex-column flex-grow-1">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <div>
+                                <p class="text-muted small mb-1 d-flex align-items-center gap-1">
+                                    <span class="material-symbols-outlined fs-6 text-primary">location_on</span> Yen Bai, Vietnam
+                                </p>
+                                <h3 class="h5 fw-bold font-display mb-0">Mù Cang Chải Rice Terraces</h3>
+                            </div>
+                            <div class="text-end">
+                                <span class="d-block text-muted text-decoration-line-through small">$1,200</span>
+                                <span class="fw-bold text-primary fs-4">$650</span>
+                            </div>
+                        </div>
+
+                        <div class="d-flex gap-3 mb-4 text-secondary small">
+                            <div class="d-flex align-items-center gap-1"><span class="material-symbols-outlined fs-5">hotel</span> Hotel</div>
+                            <div class="d-flex align-items-center gap-1"><span class="material-symbols-outlined fs-5">directions_bus</span> Trans.</div>
+                            <div class="d-flex align-items-center gap-1"><span class="material-symbols-outlined fs-5">restaurant</span> Meals</div>
+                        </div>
+
+                        <div class="mt-auto d-flex align-items-center justify-content-between pt-3 border-top">
+                            <span class="small fw-semibold text-muted">4D/3N Trip</span>
+                            <a th:href="@{/tours}" class="btn btn-outline-primary-custom btn-sm px-3">View Detail</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="col">
+                <div class="adventure-card">
+                    <div class="card-img-wrapper">
+                        <img th:src="@{/images/fansipan.jpg}" alt="Fansipan Summit Adventure">
+                        <div class="card-badge badge-bestseller">Best Seller</div>
+                        <div class="card-rating-pill glass-pill text-dark">
+                            <span class="material-symbols-outlined text-warning fs-6">star</span> 4.9 (250 reviews)
+                        </div>
+                    </div>
+                    <div class="p-4 d-flex flex-column flex-grow-1">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <div>
+                                <p class="text-muted small mb-1 d-flex align-items-center gap-1">
+                                    <span class="material-symbols-outlined fs-6 text-primary">location_on</span> Sapa, Vietnam
+                                </p>
+                                <h3 class="h5 fw-bold font-display mb-0">Fansipan Summit Adventure</h3>
+                            </div>
+                            <div class="text-end">
+                                <span class="d-block text-muted text-decoration-line-through small">$2,500</span>
+                                <span class="fw-bold text-primary fs-4">$780</span>
+                            </div>
+                        </div>
+
+                        <div class="d-flex gap-3 mb-4 text-secondary small">
+                            <div class="d-flex align-items-center gap-1"><span class="material-symbols-outlined fs-5">hotel</span> Hotel</div>
+                            <div class="d-flex align-items-center gap-1"><span class="material-symbols-outlined fs-5">train</span> Rail</div>
+                            <div class="d-flex align-items-center gap-1"><span class="material-symbols-outlined fs-5">local_bar</span> Elite</div>
+                        </div>
+
+                        <div class="mt-auto d-flex align-items-center justify-content-between pt-3 border-top">
+                            <span class="small fw-semibold text-muted">7D/6N Trip</span>
+                            <a th:href="@{/tours}" class="btn btn-outline-primary-custom btn-sm px-3">View Detail</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- Top Destinations -->
+    <section id="destinations" class="py-5 container reveal-on-scroll">
+        <div class="mb-4">
+            <h2 class="fw-extrabold font-display mb-1">Top Destinations</h2>
+            <p class="text-muted">The most searched cities this month.</p>
+        </div>
+
+        <div class="bento-grid">
+            <!-- Bento Item 1 (Large) -->
+            <div class="bento-item bento-item-large">
+                <div class="bento-item-bg" th:style="'background-image: url(' + @{/images/hanoi.jpg} + ');'"></div>
+                <div class="bento-overlay"></div>
+                <div class="bento-content">
+                    <h3 class="h2 fw-bold font-display mb-1">Hà Nội</h3>
+                    <p class="mb-0 small text-white-50">45+ Active Tours</p>
+                </div>
+            </div>
+
+            <!-- Bento Item 2 -->
+            <div class="bento-item">
+                <div class="bento-item-bg" th:style="'background-image: url(' + @{/images/halong.jpg} + ');'"></div>
+                <div class="bento-overlay"></div>
+                <div class="bento-content">
+                    <h3 class="h4 fw-bold font-display mb-1">Vịnh Hạ Long</h3>
+                    <p class="mb-0 small text-white-50">28 Tours</p>
+                </div>
+            </div>
+
+            <!-- Bento Item 3 -->
+            <div class="bento-item">
+                <div class="bento-item-bg" th:style="'background-image: url(' + @{/images/hoian.jpg} + ');'"></div>
+                <div class="bento-overlay"></div>
+                <div class="bento-content">
+                    <h3 class="h4 fw-bold font-display mb-1">Hội An</h3>
+                    <p class="mb-0 small text-white-50">32 Tours</p>
+                </div>
+            </div>
+
+            <!-- Bento Item 4 (Wide) -->
+            <div class="bento-item bento-item-wide">
+                <div class="bento-item-bg" th:style="'background-image: url(' + @{/images/danang.jpg} + ');'"></div>
+                <div class="bento-overlay"></div>
+                <div class="bento-content">
+                    <h3 class="h3 fw-bold font-display mb-1">Đà Nẵng</h3>
+                    <p class="mb-0 small text-white-50">18 Tours</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+
+    <!-- Footer -->
+    <footer class="footer-tourverse">
+        <div class="container">
+            <div class="row g-4 mb-5">
+                <div class="col-12 col-md-4">
+                    <a class="navbar-brand navbar-brand-tourverse d-block mb-3" th:href="@{/home}">TourVerse</a>
+                    <p class="text-muted small mb-4 pe-md-3">
+                        © 2026 TourVerse. Professional adventures for modern explorers. Creating memories that last a lifetime through curated travel.
+                    </p>
+                    <div class="d-flex gap-2">
+                        <a href="#" class="social-icon-btn"><span class="material-symbols-outlined fs-5">public</span></a>
+                        <a href="#" class="social-icon-btn"><span class="material-symbols-outlined fs-5">travel_explore</span></a>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-2">
+                    <h5 class="fw-bold text-uppercase fs-7 tracking-wider mb-3">Overview</h5>
+                    <ul class="list-unstyled small d-flex flex-column gap-2">
+                        <li><a th:href="@{/home}" class="footer-link">Home</a></li>
+                        <li><a th:href="@{/tours}" class="footer-link">Manage Tours</a></li>
+                        <li><a href="#" class="footer-link">About Us</a></li>
+                        <li><a href="#" class="footer-link">Pricing Plan</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-6 col-md-2">
+                    <h5 class="fw-bold text-uppercase fs-7 tracking-wider mb-3">Support</h5>
+                    <ul class="list-unstyled small d-flex flex-column gap-2">
+                        <li><a href="#" class="footer-link">Help Center</a></li>
+                        <li><a href="#" class="footer-link">Terms of Service</a></li>
+                        <li><a href="#" class="footer-link">Privacy Policy</a></li>
+                        <li><a href="#" class="footer-link">Refund Policy</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-12 col-md-4">
+                    <h5 class="fw-bold text-uppercase fs-7 tracking-wider mb-3">Contact Us</h5>
+                    <div class="d-flex flex-column gap-2 small text-muted">
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="material-symbols-outlined text-primary fs-5">mail</span>
+                            <span>tiendungql1505@gmail.com</span>
+                        </div>
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="material-symbols-outlined text-primary fs-5">call</span>
+                            <span>+84 (964491092)</span>
+                        </div>
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="material-symbols-outlined text-primary fs-5">location_on</span>
+                            <span>District 9, Thu Duc City, Ho Chi Minh City</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="border-top pt-4 text-center text-muted small">
+                Designed with precision for the modern voyager. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap Bundle JS & Scroll Reveal Script -->
+    <script th:src="@{/bootstrap.bundle.js}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px 0px -40px 0px',
+                threshold: 0.1
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                    } else {
+                        entry.target.classList.remove('is-visible');
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.reveal-on-scroll').forEach(el => {
+                observer.observe(el);
+            });
+        });
+    </script>
+</body>
+</html>

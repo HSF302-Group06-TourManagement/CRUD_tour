@@ -1,0 +1,57 @@
+/* Thiết lập chung cho body */
+body {
+    padding: 20px;
+    font-family: sans-serif;
+}
+
+/* Các thành phần Header & Title */
+.page-header {
+    padding: 40px 60px;
+    border-bottom: 1px solid #000;
+}
+
+.header-title {
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #000;
+    font-weight: bold;
+}
+
+.sub-title {
+    margin-top: 15px;
+    margin-bottom: 30px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ccc;
+    font-weight: bold;
+}
+
+/* Giao diện Panel */
+.custom-panel {
+    padding: 25px;
+    background-color: #ffffff;
+    border: 1px solid #c8d2df;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+/* Bảng và Form */
+.table-custom-header th {
+    background-color: #d9edf7;
+}
+
+.form-label-custom {
+    padding-top: 5px;
+    text-align: right;
+    font-weight: normal;
+}
+
+/* Nút bấm (Button) */
+.btn-custom {
+    width: 100px;
+    background-color: #f0f0f0;
+    border: 1px solid #999;
+}
+
+.btn-custom:hover {
+    background-color: #e0e0e0;
+}

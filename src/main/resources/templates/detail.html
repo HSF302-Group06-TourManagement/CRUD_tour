@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Tour Detail</title>
+    <link rel="stylesheet" th:href="@{/bootstrap.css}">
+    <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+<body>
+<div class="container">
+    <div th:replace="~{fragments/header :: header}"></div>
+
+    <div class="custom-panel mt-4">
+        <h2 class="sub-title">Tour Detail</h2>
+
+        <!-- Khoi nay dung cho truong hop id khong ton tai va controller tra ve 404. -->
+        <div class="alert alert-danger" th:if="${errorMessage}" th:text="${errorMessage}"></div>
+
+        <!-- Chi hien thi thong tin khi controller nap duoc object tour. -->
+        <div th:if="${tour != null}">
+            <dl class="row">
+                <dt class="col-sm-3">ID</dt>
+                <dd class="col-sm-9" th:text="${tour.id}"></dd>
+
+                <dt class="col-sm-3">Tour Name</dt>
+                <dd class="col-sm-9" th:text="${tour.tourName}"></dd>
+
+                <dt class="col-sm-3">Destination</dt>
+                <dd class="col-sm-9" th:text="${tour.destination}"></dd>
+
+                <dt class="col-sm-3">Capacity</dt>
+                <dd class="col-sm-9" th:text="${tour.capacity}"></dd>
+
+                <dt class="col-sm-3">Duration</dt>
+                <dd class="col-sm-9" th:text="${tour.duration + ' days'}"></dd>
+
+                <dt class="col-sm-3">Start Date</dt>
+                <dd class="col-sm-9" th:text="${#temporals.format(tour.startDate, 'dd/MM/yyyy')}"></dd>
+
+                <dt class="col-sm-3">Price</dt>
+                <dd class="col-sm-9" th:text="${#numbers.formatDecimal(tour.price, 1, 'COMMA', 2, 'POINT') + ' $'}"></dd>
+
+                <dt class="col-sm-3">Status</dt>
+                <dd class="col-sm-9" th:text="${tour.statusDesc}"></dd>
+            </dl>
+
+            <a class="btn btn-warning" th:href="@{/tours/{id}/update(id=${tour.id})}">Update</a>
+            <!-- Nut Delete mo modal Bootstrap thay cho popup confirm cua window. -->
+            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                Delete
+            </button>
+
+            <!-- Modal xac nhan truoc khi gui request POST de xoa tour. -->
+            <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            Are you sure you want to delete
+                            <strong th:text="${tour.tourName}"></strong>?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <form th:action="@{/tours/{id}/delete(id=${tour.id})}" method="post">
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <a class="btn btn-secondary mt-3" th:href="@{/tours}">Back to List</a>
+    </div>
+</div>
+<script th:src="@{/bootstrap.bundle.js}"></script>
+</body>
+</html>
